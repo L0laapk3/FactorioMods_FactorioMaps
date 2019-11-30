@@ -11,6 +11,7 @@ let COORDSCALE = 2**19 / 16 * window.devicePixelRatio;
 //let _getTileUrl = L.TileLayer.prototype.getTileUrl;
 //L.TileLayer.prototype.getTileUrl = function(coords) { return _getTileUrl.call(this, {x: coords.x - 1 * Math.pow(2, coords.z - 2), y: coords.y, z: coords.z}); };
 
+
 L.TileLayer.prototype.getTileUrl = function(c) {
 	let mapIndex = this.tileIndex[c.z] && this.tileIndex[c.z][c.y] && this.tileIndex[c.z][c.y][c.x];
 	if (isNaN(mapIndex))
@@ -22,6 +23,9 @@ L.TileLayer.prototype.getTileUrl = function(c) {
 
 //TODO: iterate over surfaces
 //let surface = Object.keys(mapInfo.maps[0].surfaces)[0];
+
+// Reorder maps by their time
+mapInfo['maps'].sort((a,b) => parseInt(a.path) > parseInt(b.path) ? 1 : -1);
 
 
 let layers = [], saves = [], countAvailableSaves = 0, layersByTimestamp = [], labels = [];
