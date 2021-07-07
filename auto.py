@@ -801,7 +801,7 @@ def auto(*args):
 							zipPath = os.path.join(args.basepath, args.mod_path, mod[2] + ".zip")
 							with ZipFile(zipPath, 'r') as zipObj:
 								if len(icons) == 1:
-									zipInfo = zipObj.getinfo(os.path.join(mod[2], icon + ".png").replace('\\', '/'))
+									zipInfo = zipObj.getinfo(os.path.join(mod[0], icon + ".png").replace('\\', '/'))
 									zipInfo.filename = os.path.basename(dest)
 									zipObj.extract(zipInfo, os.path.dirname(os.path.realpath(dest)))
 									src = None
