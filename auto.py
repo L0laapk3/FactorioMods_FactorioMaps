@@ -748,6 +748,14 @@ def auto(*args):
 			os.remove(os.path.join(workfolder, "mapInfo.out.json"))
 
 
+		# List of length 3 tuples:
+		#   mod name in lowercase (e.g. `krastorio2`, `fnei`)
+		#   (major version string, minor version string, patch version string, bool if the mod's a zipfile)
+		#   mod full ID in original casing (e.g. `Krastorio2_1.1.4`, `FNEI_0.4.1`)
+		#
+		# Does not include mods that don't have versions in
+		# their names, such as mods manually installed from
+		# source.
 		modVersions = sorted(
 				map(lambda m: (m.group(2).lower(), (m.group(3), m.group(4), m.group(5), m.group(6) is None), m.group(1)),
 					filter(lambda m: m,
@@ -810,13 +818,14 @@ def auto(*args):
 						if not mod[1][3]: #true if mod is zip
 							zipPath = os.path.join(args.basepath, args.mod_path, mod[2] + ".zip")
 							with ZipFile(zipPath, 'r') as zipObj:
+								internalFolder = os.path.commonpath(zipObj.namelist())
 								if len(icons) == 1:
-									zipInfo = zipObj.getinfo(os.path.join(mod[2], icon + ".png").replace('\\', '/'))
+									zipInfo = zipObj.getinfo(os.path.join(internalFolder, icon + ".png").replace('\\', '/'))
 									zipInfo.filename = os.path.basename(dest)
 									zipObj.extract(zipInfo, os.path.dirname(os.path.realpath(dest)))
 									src = None
 								else:
-									src = zipObj.extract(os.path.join(mod[2], icon + ".png").replace('\\', '/'), os.path.join(tempfile.gettempdir(), "FactorioMaps"))
+									src = zipObj.extract(os.path.join(internalFolder, icon + ".png").replace('\\', '/'), os.path.join(tempfile.gettempdir(), "FactorioMaps"))
 						else:
 							src = os.path.join(args.basepath, args.mod_path, mod[2], icon + ".png")
 
